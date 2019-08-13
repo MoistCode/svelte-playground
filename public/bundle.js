@@ -73,10 +73,29 @@ var app = (function () {
         if (text.data !== data)
             text.data = data;
     }
+    function custom_event(type, detail) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, false, false, detail);
+        return e;
+    }
 
     let current_component;
     function set_current_component(component) {
         current_component = component;
+    }
+    function createEventDispatcher() {
+        const component = current_component;
+        return (type, detail) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail);
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+            }
+        };
     }
 
     const dirty_components = [];
@@ -617,20 +636,21 @@ var app = (function () {
     			input2 = element("input");
     			attr(input0, "type", "text");
     			attr(input0, "placeholder", "Player Name");
-    			add_location(input0, file$2, 8, 2, 94);
+    			add_location(input0, file$2, 23, 2, 358);
     			attr(input1, "type", "number");
     			attr(input1, "placeholder", "Player Points");
-    			add_location(input1, file$2, 9, 2, 169);
+    			add_location(input1, file$2, 24, 2, 433);
     			attr(input2, "type", "submit");
     			attr(input2, "class", "btn btn-primary");
     			input2.value = "Add Player";
-    			add_location(input2, file$2, 10, 2, 250);
+    			add_location(input2, file$2, 25, 2, 514);
     			attr(form, "class", "grid-3");
-    			add_location(form, file$2, 7, 0, 70);
+    			add_location(form, file$2, 22, 0, 313);
 
     			dispose = [
     				listen(input0, "input", ctx.input0_input_handler),
-    				listen(input1, "input", ctx.input1_input_handler)
+    				listen(input1, "input", ctx.input1_input_handler),
+    				listen(form, "submit", ctx.onSubmit)
     			];
     		},
 
@@ -672,9 +692,22 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	let player = {
+    	const dispatch = createEventDispatcher();
+
+      let player = {
         name: "",
         points: 0
+      };
+
+      const onSubmit = e => {
+        e.preventDefault();
+
+        dispatch("addplayer", player);
+
+        $$invalidate('player', player = {
+          name: "",
+          points: 0
+        });
       };
 
     	function input0_input_handler() {
@@ -689,6 +722,7 @@ var app = (function () {
 
     	return {
     		player,
+    		onSubmit,
     		input0_input_handler,
     		input1_input_handler
     	};
