@@ -1,8 +1,7 @@
 <script>
-  import Navbar from "./Navbar.svelte";
+  export let name = "John Doe";
+  export let points = 100;
 
-  let name = "John Doe";
-  let points = 100;
   let showControls = false;
 
   const addPoint = () => (points += 1);

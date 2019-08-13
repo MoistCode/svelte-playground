@@ -341,7 +341,7 @@ var app = (function () {
 
     const file$1 = "src/Player.svelte";
 
-    // (27:25) {:else}
+    // (26:25) {:else}
     function create_else_block(ctx) {
     	var t;
 
@@ -362,7 +362,7 @@ var app = (function () {
     	};
     }
 
-    // (27:6) {#if showControls}
+    // (26:6) {#if showControls}
     function create_if_block_1(ctx) {
     	var t;
 
@@ -383,7 +383,7 @@ var app = (function () {
     	};
     }
 
-    // (31:2) {#if showControls}
+    // (30:2) {#if showControls}
     function create_if_block(ctx) {
     	var button0, t1, button1, t3, input, dispose;
 
@@ -397,11 +397,11 @@ var app = (function () {
     			t3 = space();
     			input = element("input");
     			attr(button0, "class", "btn");
-    			add_location(button0, file$1, 31, 4, 576);
+    			add_location(button0, file$1, 30, 4, 550);
     			attr(button1, "class", "btn btn-dark");
-    			add_location(button1, file$1, 32, 4, 632);
+    			add_location(button1, file$1, 31, 4, 606);
     			attr(input, "type", "number");
-    			add_location(input, file$1, 33, 4, 700);
+    			add_location(input, file$1, 32, 4, 674);
 
     			dispose = [
     				listen(button0, "click", ctx.addPoint),
@@ -455,7 +455,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			h1 = element("h1");
-    			t0 = text(name);
+    			t0 = text(ctx.name);
     			t1 = space();
     			button = element("button");
     			if_block0.c();
@@ -466,13 +466,13 @@ var app = (function () {
     			t5 = space();
     			if (if_block1) if_block1.c();
     			attr(button, "class", "btn btn-sm");
-    			add_location(button, file$1, 25, 4, 408);
+    			add_location(button, file$1, 24, 4, 382);
     			attr(h1, "class", "svelte-n9s305");
-    			add_location(h1, file$1, 23, 2, 388);
+    			add_location(h1, file$1, 22, 2, 362);
     			attr(h3, "class", "svelte-n9s305");
-    			add_location(h3, file$1, 29, 2, 525);
+    			add_location(h3, file$1, 28, 2, 499);
     			attr(div, "class", "card");
-    			add_location(div, file$1, 22, 0, 367);
+    			add_location(div, file$1, 21, 0, 341);
     			dispose = listen(button, "click", ctx.toggleControls);
     		},
 
@@ -496,6 +496,10 @@ var app = (function () {
     		},
 
     		p: function update(changed, ctx) {
+    			if (changed.name) {
+    				set_data(t0, ctx.name);
+    			}
+
     			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
     				if_block0.d(1);
     				if_block0 = current_block_type(ctx);
@@ -538,23 +542,32 @@ var app = (function () {
     	};
     }
 
-    let name = "John Doe";
-
     function instance($$self, $$props, $$invalidate) {
-    	
-      let points = 100;
+    	let { name = "John Doe", points = 100 } = $$props;
+
       let showControls = false;
 
       const addPoint = () => { const $$result = (points += 1); $$invalidate('points', points); return $$result; };
       const removePoint = () => { const $$result = (points -= 1); $$invalidate('points', points); return $$result; };
       const toggleControls = () => { const $$result = (showControls = !showControls); $$invalidate('showControls', showControls); return $$result; };
 
+    	const writable_props = ['name', 'points'];
+    	Object.keys($$props).forEach(key => {
+    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Player> was created with unknown prop '${key}'`);
+    	});
+
     	function input_input_handler() {
     		points = to_number(this.value);
     		$$invalidate('points', points);
     	}
 
+    	$$self.$set = $$props => {
+    		if ('name' in $$props) $$invalidate('name', name = $$props.name);
+    		if ('points' in $$props) $$invalidate('points', points = $$props.points);
+    	};
+
     	return {
+    		name,
     		points,
     		showControls,
     		addPoint,
@@ -567,7 +580,23 @@ var app = (function () {
     class Player extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment$1, safe_not_equal, []);
+    		init(this, options, instance, create_fragment$1, safe_not_equal, ["name", "points"]);
+    	}
+
+    	get name() {
+    		throw new Error("<Player>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set name(value) {
+    		throw new Error("<Player>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get points() {
+    		throw new Error("<Player>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set points(value) {
+    		throw new Error("<Player>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -581,7 +610,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (16:2) {:else}
+    // (29:2) {:else}
     function create_else_block$1(ctx) {
     	var each_1_anchor, current;
 
@@ -617,16 +646,16 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			if (changed.players) {
-    				const old_length = each_value.length;
     				each_value = ctx.players;
 
-    				for (var i = old_length; i < each_value.length; i += 1) {
+    				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context(ctx, each_value, i);
 
     					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
     						transition_in(each_blocks[i], 1);
     					} else {
-    						each_blocks[i] = create_each_block();
+    						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
     						transition_in(each_blocks[i], 1);
     						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
@@ -663,7 +692,7 @@ var app = (function () {
     	};
     }
 
-    // (14:2) {#if players.length === 0}
+    // (27:2) {#if players.length === 0}
     function create_if_block$1(ctx) {
     	var p;
 
@@ -671,7 +700,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "No Players";
-    			add_location(p, file$2, 14, 4, 210);
+    			add_location(p, file$2, 27, 4, 381);
     		},
 
     		m: function mount(target, anchor) {
@@ -690,11 +719,14 @@ var app = (function () {
     	};
     }
 
-    // (17:4) {#each players as player}
+    // (30:4) {#each players as player}
     function create_each_block(ctx) {
     	var current;
 
-    	var player = new Player({ $$inline: true });
+    	var player = new Player({
+    		props: { name: ctx.player.name, points: ctx.player.points },
+    		$$inline: true
+    	});
 
     	return {
     		c: function create() {
@@ -704,6 +736,13 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			mount_component(player, target, anchor);
     			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			var player_changes = {};
+    			if (changed.players) player_changes.name = ctx.player.name;
+    			if (changed.players) player_changes.points = ctx.player.points;
+    			player.$set(player_changes);
     		},
 
     		i: function intro(local) {
@@ -751,7 +790,7 @@ var app = (function () {
     			div = element("div");
     			if_block.c();
     			attr(div, "class", "container");
-    			add_location(div, file$2, 12, 0, 153);
+    			add_location(div, file$2, 25, 0, 324);
     		},
 
     		l: function claim(nodes) {
@@ -818,7 +857,20 @@ var app = (function () {
     function instance$1($$self) {
     	
 
-      const players = [];
+      const players = [
+        {
+          name: "John Doe",
+          points: 100
+        },
+        {
+          name: "Timmy Turner",
+          points: 100
+        },
+        {
+          name: "Jack Boo",
+          points: 100
+        }
+      ];
 
     	return { players };
     }
