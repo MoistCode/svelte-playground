@@ -40,6 +40,9 @@ var app = (function () {
     function text(data) {
         return document.createTextNode(data);
     }
+    function space() {
+        return text(' ');
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -243,16 +246,18 @@ var app = (function () {
     const file = "src/App.svelte";
 
     function create_fragment(ctx) {
-    	var h1, t0, t1, t2;
+    	var h1, t0, t1, h3, t2;
 
     	return {
     		c: function create() {
     			h1 = element("h1");
-    			t0 = text("Hello ");
-    			t1 = text(name);
-    			t2 = text("!");
+    			t0 = text(name);
+    			t1 = space();
+    			h3 = element("h3");
+    			t2 = text(points);
     			attr(h1, "class", "svelte-1ucbz36");
-    			add_location(h1, file, 10, 0, 93);
+    			add_location(h1, file, 11, 0, 113);
+    			add_location(h3, file, 12, 0, 129);
     		},
 
     		l: function claim(nodes) {
@@ -262,8 +267,9 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert(target, h1, anchor);
     			append(h1, t0);
-    			append(h1, t1);
-    			append(h1, t2);
+    			insert(target, t1, anchor);
+    			insert(target, h3, anchor);
+    			append(h3, t2);
     		},
 
     		p: noop,
@@ -273,12 +279,16 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) {
     				detach(h1);
+    				detach(t1);
+    				detach(h3);
     			}
     		}
     	};
     }
 
     let name = "John Doe";
+
+    let points = 100;
 
     class App extends SvelteComponentDev {
     	constructor(options) {
