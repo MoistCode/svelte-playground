@@ -3,20 +3,26 @@
   import Player from "./Player.svelte";
   import AddPlayer from "./AddPlayer.svelte";
 
-  let players = [
-    {
+  let id = 4;
+  let playerLength = 3;
+
+  let players = {
+    "1": {
+      id: "1",
       name: "John Doe",
       points: 100
     },
-    {
-      name: "Timmy Turner",
+    "2": {
+      id: "2",
+      name: "John Doe",
       points: 100
     },
-    {
-      name: "Jack Boo",
+    "3": {
+      id: "3",
+      name: "John Doe",
       points: 100
     }
-  ];
+  };
 
   const addPlayer = e => {
     const newPlayer = e.detail;
@@ -32,10 +38,10 @@
 <Navbar />
 <div class="container">
   <AddPlayer on:addplayer={addPlayer} />
-  {#if players.length === 0}
+  {#if playerLength === 0}
     <p>No Players</p>
   {:else}
-    {#each players as player}
+    {#each Object.values(players) as player}
       <Player name={player.name} points={player.points} />
     {/each}
   {/if}

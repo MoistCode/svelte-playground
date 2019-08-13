@@ -745,11 +745,11 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (37:2) {:else}
+    // (43:2) {:else}
     function create_else_block$1(ctx) {
     	var each_1_anchor, current;
 
-    	var each_value = ctx.players;
+    	var each_value = Object.values(ctx.players);
 
     	var each_blocks = [];
 
@@ -781,7 +781,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			if (changed.players) {
-    				each_value = ctx.players;
+    				each_value = Object.values(ctx.players);
 
     				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context(ctx, each_value, i);
@@ -827,7 +827,7 @@ var app = (function () {
     	};
     }
 
-    // (35:2) {#if players.length === 0}
+    // (41:2) {#if playerLength === 0}
     function create_if_block$1(ctx) {
     	var p;
 
@@ -835,7 +835,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "No Players";
-    			add_location(p, file$3, 35, 4, 571);
+    			add_location(p, file$3, 41, 4, 664);
     		},
 
     		m: function mount(target, anchor) {
@@ -854,7 +854,7 @@ var app = (function () {
     	};
     }
 
-    // (38:4) {#each players as player}
+    // (44:4) {#each Object.values(players) as player}
     function create_each_block(ctx) {
     	var current;
 
@@ -914,11 +914,10 @@ var app = (function () {
     	var if_blocks = [];
 
     	function select_block_type(ctx) {
-    		if (ctx.players.length === 0) return 0;
     		return 1;
     	}
 
-    	current_block_type_index = select_block_type(ctx);
+    	current_block_type_index = select_block_type();
     	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	return {
@@ -930,7 +929,7 @@ var app = (function () {
     			t1 = space();
     			if_block.c();
     			attr(div, "class", "container");
-    			add_location(div, file$3, 32, 0, 473);
+    			add_location(div, file$3, 38, 0, 568);
     		},
 
     		l: function claim(nodes) {
@@ -949,7 +948,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			var previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type(ctx);
+    			current_block_type_index = select_block_type();
     			if (current_block_type_index === previous_block_index) {
     				if_blocks[current_block_type_index].p(changed, ctx);
     			} else {
@@ -1004,20 +1003,23 @@ var app = (function () {
     function instance$2($$self, $$props, $$invalidate) {
     	
 
-      let players = [
-        {
+      let players = {
+        "1": {
+          id: "1",
           name: "John Doe",
           points: 100
         },
-        {
-          name: "Timmy Turner",
+        "2": {
+          id: "2",
+          name: "John Doe",
           points: 100
         },
-        {
-          name: "Jack Boo",
+        "3": {
+          id: "3",
+          name: "John Doe",
           points: 100
         }
-      ];
+      };
 
       const addPlayer = e => {
         const newPlayer = e.detail;
