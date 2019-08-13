@@ -5,7 +5,7 @@
     "../src/App.svelte"
   ],
   "sourcesContent": [
-    "<script>\n  let name = \"John Doe\";\n  let points = 100;\n\n  const addPoint = () => (points += 1);\n  const removePoint = () => (points -= 1);\n</script>\n\n<style>\n  h1 {\n    color: #204f2e;\n  }\n</style>\n\n<div class=\"container\">\n  <div class=\"card\">\n    <h1>{name}</h1>\n    <h3>{points}</h3>\n    <button class=\"btn\" on:click={addPoint}>+1</button>\n    <button class=\"btn btn-dark\" on:click={removePoint}>-1</button>\n  </div>\n</div>\n"
+    "<script>\n  let name = \"John Doe\";\n  let points = 100;\n\n  const addPoint = () => (points += 1);\n  const removePoint = () => (points -= 1);\n</script>\n\n<style>\n  h1 {\n    color: #204f2e;\n  }\n</style>\n\n<div class=\"container\">\n  <div class=\"card\">\n    <h1>{name}</h1>\n    <h3>{points}</h3>\n    <button class=\"btn\" on:click={addPoint}>+1</button>\n    <button class=\"btn btn-dark\" on:click={removePoint}>-1</button>\n    <input type=\"number\" bind:value={points} />\n  </div>\n</div>\n"
   ],
   "names": [],
   "mappings": "AASE,EAAE,eAAC,CAAC,AACF,KAAK,CAAE,OAAO,AAChB,CAAC"

@@ -53,6 +53,9 @@ var app = (function () {
         else
             node.setAttribute(attribute, value);
     }
+    function to_number(value) {
+        return value === '' ? undefined : +value;
+    }
     function children(element) {
         return Array.from(element.childNodes);
     }
@@ -255,7 +258,7 @@ var app = (function () {
     const file = "src/App.svelte";
 
     function create_fragment(ctx) {
-    	var div1, div0, h1, t0, t1, h3, t2, t3, button0, t5, button1, dispose;
+    	var div1, div0, h1, t0, t1, h3, t2, t3, button0, t5, button1, t7, input, dispose;
 
     	return {
     		c: function create() {
@@ -272,6 +275,8 @@ var app = (function () {
     			t5 = space();
     			button1 = element("button");
     			button1.textContent = "-1";
+    			t7 = space();
+    			input = element("input");
     			attr(h1, "class", "svelte-10ukloy");
     			add_location(h1, file, 16, 4, 247);
     			add_location(h3, file, 17, 4, 267);
@@ -279,6 +284,8 @@ var app = (function () {
     			add_location(button0, file, 18, 4, 289);
     			attr(button1, "class", "btn btn-dark");
     			add_location(button1, file, 19, 4, 345);
+    			attr(input, "type", "number");
+    			add_location(input, file, 20, 4, 413);
     			attr(div0, "class", "card");
     			add_location(div0, file, 15, 2, 224);
     			attr(div1, "class", "container");
@@ -286,7 +293,8 @@ var app = (function () {
 
     			dispose = [
     				listen(button0, "click", ctx.addPoint),
-    				listen(button1, "click", ctx.removePoint)
+    				listen(button1, "click", ctx.removePoint),
+    				listen(input, "input", ctx.input_input_handler)
     			];
     		},
 
@@ -306,12 +314,18 @@ var app = (function () {
     			append(div0, button0);
     			append(div0, t5);
     			append(div0, button1);
+    			append(div0, t7);
+    			append(div0, input);
+
+    			input.value = ctx.points;
     		},
 
     		p: function update(changed, ctx) {
     			if (changed.points) {
     				set_data(t2, ctx.points);
     			}
+
+    			if (changed.points) input.value = ctx.points;
     		},
 
     		i: noop,
@@ -336,7 +350,17 @@ var app = (function () {
       const addPoint = () => { const $$result = (points += 1); $$invalidate('points', points); return $$result; };
       const removePoint = () => { const $$result = (points -= 1); $$invalidate('points', points); return $$result; };
 
-    	return { points, addPoint, removePoint };
+    	function input_input_handler() {
+    		points = to_number(this.value);
+    		$$invalidate('points', points);
+    	}
+
+    	return {
+    		points,
+    		addPoint,
+    		removePoint,
+    		input_input_handler
+    	};
     }
 
     class App extends SvelteComponentDev {
