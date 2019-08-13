@@ -1,12 +1,22 @@
 <script>
-  export let name = "John Doe";
-  export let points = 100;
+  import { createEventDispatcher } from "svelte";
+
+  export let id = null;
+  export let name = "Name not available";
+  export let points = 999;
+
+  const dispatch = createEventDispatcher();
 
   let showControls = false;
 
   const addPoint = () => (points += 1);
   const removePoint = () => (points -= 1);
   const toggleControls = () => (showControls = !showControls);
+  const removePlayer = e => {
+    e.preventDefault();
+
+    dispatch("removeplayer", id);
+  };
 </script>
 
 <style>
@@ -30,6 +40,7 @@
   {#if showControls}
     <button class="btn" on:click={addPoint}>+1</button>
     <button class="btn btn-dark" on:click={removePoint}>-1</button>
+    <button class="btn btn-dark" on:click={removePlayer}>Delete</button>
     <input type="number" bind:value={points} />
   {/if}
 </div>

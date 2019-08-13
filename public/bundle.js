@@ -360,7 +360,7 @@ var app = (function () {
 
     const file$1 = "src/Player.svelte";
 
-    // (26:25) {:else}
+    // (36:25) {:else}
     function create_else_block(ctx) {
     	var t;
 
@@ -381,7 +381,7 @@ var app = (function () {
     	};
     }
 
-    // (26:6) {#if showControls}
+    // (36:6) {#if showControls}
     function create_if_block_1(ctx) {
     	var t;
 
@@ -402,9 +402,9 @@ var app = (function () {
     	};
     }
 
-    // (30:2) {#if showControls}
+    // (40:2) {#if showControls}
     function create_if_block(ctx) {
-    	var button0, t1, button1, t3, input, dispose;
+    	var button0, t1, button1, t3, button2, t5, input, dispose;
 
     	return {
     		c: function create() {
@@ -414,17 +414,23 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "-1";
     			t3 = space();
+    			button2 = element("button");
+    			button2.textContent = "Delete";
+    			t5 = space();
     			input = element("input");
     			attr(button0, "class", "btn");
-    			add_location(button0, file$1, 30, 4, 550);
+    			add_location(button0, file$1, 40, 4, 774);
     			attr(button1, "class", "btn btn-dark");
-    			add_location(button1, file$1, 31, 4, 606);
+    			add_location(button1, file$1, 41, 4, 830);
+    			attr(button2, "class", "btn btn-dark");
+    			add_location(button2, file$1, 42, 4, 898);
     			attr(input, "type", "number");
-    			add_location(input, file$1, 32, 4, 674);
+    			add_location(input, file$1, 43, 4, 971);
 
     			dispose = [
     				listen(button0, "click", ctx.addPoint),
     				listen(button1, "click", ctx.removePoint),
+    				listen(button2, "click", ctx.removePlayer),
     				listen(input, "input", ctx.input_input_handler)
     			];
     		},
@@ -434,6 +440,8 @@ var app = (function () {
     			insert(target, t1, anchor);
     			insert(target, button1, anchor);
     			insert(target, t3, anchor);
+    			insert(target, button2, anchor);
+    			insert(target, t5, anchor);
     			insert(target, input, anchor);
 
     			input.value = ctx.points;
@@ -449,6 +457,8 @@ var app = (function () {
     				detach(t1);
     				detach(button1);
     				detach(t3);
+    				detach(button2);
+    				detach(t5);
     				detach(input);
     			}
 
@@ -485,13 +495,13 @@ var app = (function () {
     			t5 = space();
     			if (if_block1) if_block1.c();
     			attr(button, "class", "btn btn-sm");
-    			add_location(button, file$1, 24, 4, 382);
+    			add_location(button, file$1, 34, 4, 606);
     			attr(h1, "class", "svelte-n9s305");
-    			add_location(h1, file$1, 22, 2, 362);
+    			add_location(h1, file$1, 32, 2, 586);
     			attr(h3, "class", "svelte-n9s305");
-    			add_location(h3, file$1, 28, 2, 499);
+    			add_location(h3, file$1, 38, 2, 723);
     			attr(div, "class", "card");
-    			add_location(div, file$1, 21, 0, 341);
+    			add_location(div, file$1, 31, 0, 565);
     			dispose = listen(button, "click", ctx.toggleControls);
     		},
 
@@ -562,15 +572,22 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	let { name = "John Doe", points = 100 } = $$props;
+    	let { id = null, name = "Name not available", points = 999 } = $$props;
+
+      const dispatch = createEventDispatcher();
 
       let showControls = false;
 
       const addPoint = () => { const $$result = (points += 1); $$invalidate('points', points); return $$result; };
       const removePoint = () => { const $$result = (points -= 1); $$invalidate('points', points); return $$result; };
       const toggleControls = () => { const $$result = (showControls = !showControls); $$invalidate('showControls', showControls); return $$result; };
+      const removePlayer = e => {
+        e.preventDefault();
 
-    	const writable_props = ['name', 'points'];
+        dispatch("removeplayer", id);
+      };
+
+    	const writable_props = ['id', 'name', 'points'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Player> was created with unknown prop '${key}'`);
     	});
@@ -581,17 +598,20 @@ var app = (function () {
     	}
 
     	$$self.$set = $$props => {
+    		if ('id' in $$props) $$invalidate('id', id = $$props.id);
     		if ('name' in $$props) $$invalidate('name', name = $$props.name);
     		if ('points' in $$props) $$invalidate('points', points = $$props.points);
     	};
 
     	return {
+    		id,
     		name,
     		points,
     		showControls,
     		addPoint,
     		removePoint,
     		toggleControls,
+    		removePlayer,
     		input_input_handler
     	};
     }
@@ -599,7 +619,15 @@ var app = (function () {
     class Player extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment$1, safe_not_equal, ["name", "points"]);
+    		init(this, options, instance, create_fragment$1, safe_not_equal, ["id", "name", "points"]);
+    	}
+
+    	get id() {
+    		throw new Error("<Player>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set id(value) {
+    		throw new Error("<Player>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get name() {
@@ -745,7 +773,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (43:2) {:else}
+    // (60:2) {:else}
     function create_else_block$1(ctx) {
     	var each_1_anchor, current;
 
@@ -827,7 +855,7 @@ var app = (function () {
     	};
     }
 
-    // (41:2) {#if playerLength === 0}
+    // (58:2) {#if playerLength === 0}
     function create_if_block$1(ctx) {
     	var p;
 
@@ -835,7 +863,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "No Players";
-    			add_location(p, file$3, 41, 4, 664);
+    			add_location(p, file$3, 58, 4, 950);
     		},
 
     		m: function mount(target, anchor) {
@@ -854,14 +882,19 @@ var app = (function () {
     	};
     }
 
-    // (44:4) {#each Object.values(players) as player}
+    // (61:4) {#each Object.values(players) as player}
     function create_each_block(ctx) {
     	var current;
 
     	var player = new Player({
-    		props: { name: ctx.player.name, points: ctx.player.points },
+    		props: {
+    		name: ctx.player.name,
+    		points: ctx.player.points,
+    		id: ctx.player.id
+    	},
     		$$inline: true
     	});
+    	player.$on("removeplayer", ctx.removePlayer);
 
     	return {
     		c: function create() {
@@ -877,6 +910,7 @@ var app = (function () {
     			var player_changes = {};
     			if (changed.players) player_changes.name = ctx.player.name;
     			if (changed.players) player_changes.points = ctx.player.points;
+    			if (changed.players) player_changes.id = ctx.player.id;
     			player.$set(player_changes);
     		},
 
@@ -914,10 +948,11 @@ var app = (function () {
     	var if_blocks = [];
 
     	function select_block_type(ctx) {
+    		if (ctx.playerLength === 0) return 0;
     		return 1;
     	}
 
-    	current_block_type_index = select_block_type();
+    	current_block_type_index = select_block_type(ctx);
     	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	return {
@@ -929,7 +964,7 @@ var app = (function () {
     			t1 = space();
     			if_block.c();
     			attr(div, "class", "container");
-    			add_location(div, file$3, 38, 0, 568);
+    			add_location(div, file$3, 55, 0, 854);
     		},
 
     		l: function claim(nodes) {
@@ -948,7 +983,7 @@ var app = (function () {
 
     		p: function update(changed, ctx) {
     			var previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type();
+    			current_block_type_index = select_block_type(ctx);
     			if (current_block_type_index === previous_block_index) {
     				if_blocks[current_block_type_index].p(changed, ctx);
     			} else {
@@ -1003,6 +1038,9 @@ var app = (function () {
     function instance$2($$self, $$props, $$invalidate) {
     	
 
+      let id = 4;
+      let playerLength = 3;
+
       let players = {
         "1": {
           id: "1",
@@ -1011,12 +1049,12 @@ var app = (function () {
         },
         "2": {
           id: "2",
-          name: "John Doe",
-          points: 100
+          name: "Moist Code",
+          points: 6969
         },
         "3": {
           id: "3",
-          name: "John Doe",
+          name: "Cow Man",
           points: 100
         }
       };
@@ -1024,10 +1062,32 @@ var app = (function () {
       const addPlayer = e => {
         const newPlayer = e.detail;
 
-        $$invalidate('players', players = [...players, newPlayer]);
+        $$invalidate('players', players = {
+          ...players,
+          [String(id)]: newPlayer
+        });
+
+        id += 1;
+        $$invalidate('playerLength', playerLength += 1);
       };
 
-    	return { players, addPlayer };
+      const removePlayer = e => {
+        const playerId = e.detail;
+        const tempPlayers = JSON.parse(JSON.stringify(players));
+
+        delete tempPlayers[playerId];
+
+        $$invalidate('players', players = tempPlayers);
+
+        $$invalidate('playerLength', playerLength -= 1);
+      };
+
+    	return {
+    		playerLength,
+    		players,
+    		addPlayer,
+    		removePlayer
+    	};
     }
 
     class App extends SvelteComponentDev {
