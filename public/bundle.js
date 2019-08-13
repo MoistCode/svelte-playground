@@ -43,6 +43,10 @@ var app = (function () {
     function space() {
         return text(' ');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -51,6 +55,11 @@ var app = (function () {
     }
     function children(element) {
         return Array.from(element.childNodes);
+    }
+    function set_data(text, data) {
+        data = '' + data;
+        if (text.data !== data)
+            text.data = data;
     }
 
     let current_component;
@@ -246,7 +255,7 @@ var app = (function () {
     const file = "src/App.svelte";
 
     function create_fragment(ctx) {
-    	var div1, div0, h1, t0, t1, h3, t2;
+    	var div1, div0, h1, t0, t1, h3, t2, t3, button0, t5, button1, dispose;
 
     	return {
     		c: function create() {
@@ -256,14 +265,29 @@ var app = (function () {
     			t0 = text(name);
     			t1 = space();
     			h3 = element("h3");
-    			t2 = text(points);
+    			t2 = text(ctx.points);
+    			t3 = space();
+    			button0 = element("button");
+    			button0.textContent = "+1";
+    			t5 = space();
+    			button1 = element("button");
+    			button1.textContent = "-1";
     			attr(h1, "class", "svelte-10ukloy");
-    			add_location(h1, file, 13, 4, 163);
-    			add_location(h3, file, 14, 4, 183);
+    			add_location(h1, file, 16, 4, 247);
+    			add_location(h3, file, 17, 4, 267);
+    			attr(button0, "class", "btn");
+    			add_location(button0, file, 18, 4, 289);
+    			attr(button1, "class", "btn btn-dark");
+    			add_location(button1, file, 19, 4, 345);
     			attr(div0, "class", "card");
-    			add_location(div0, file, 12, 2, 140);
+    			add_location(div0, file, 15, 2, 224);
     			attr(div1, "class", "container");
-    			add_location(div1, file, 11, 0, 114);
+    			add_location(div1, file, 14, 0, 198);
+
+    			dispose = [
+    				listen(button0, "click", ctx.addPoint),
+    				listen(button1, "click", ctx.removePoint)
+    			];
     		},
 
     		l: function claim(nodes) {
@@ -278,9 +302,18 @@ var app = (function () {
     			append(div0, t1);
     			append(div0, h3);
     			append(h3, t2);
+    			append(div0, t3);
+    			append(div0, button0);
+    			append(div0, t5);
+    			append(div0, button1);
     		},
 
-    		p: noop,
+    		p: function update(changed, ctx) {
+    			if (changed.points) {
+    				set_data(t2, ctx.points);
+    			}
+    		},
+
     		i: noop,
     		o: noop,
 
@@ -288,18 +321,28 @@ var app = (function () {
     			if (detaching) {
     				detach(div1);
     			}
+
+    			run_all(dispose);
     		}
     	};
     }
 
     let name = "John Doe";
 
-    let points = 100;
+    function instance($$self, $$props, $$invalidate) {
+    	
+      let points = 100;
+
+      const addPoint = () => { const $$result = (points += 1); $$invalidate('points', points); return $$result; };
+      const removePoint = () => { const $$result = (points -= 1); $$invalidate('points', points); return $$result; };
+
+    	return { points, addPoint, removePoint };
+    }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment, safe_not_equal, []);
+    		init(this, options, instance, create_fragment, safe_not_equal, []);
     	}
     }
 
