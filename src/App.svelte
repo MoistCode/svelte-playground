@@ -5,9 +5,13 @@
 
 <style>
   h1 {
-    color: purple;
+    color: #204f2e;
   }
 </style>
 
-<h1>{name}</h1>
-<h3>{points}</h3>
+<div class="container">
+  <div class="card">
+    <h1>{name}</h1>
+    <h3>{points}</h3>
+  </div>
+</div>

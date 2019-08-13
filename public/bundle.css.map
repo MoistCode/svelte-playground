@@ -5,8 +5,8 @@
     "../src/App.svelte"
   ],
   "sourcesContent": [
-    "<script>\n  let name = \"John Doe\";\n  let points = 100;\n</script>\n\n<style>\n  h1 {\n    color: purple;\n  }\n</style>\n\n<h1>{name}</h1>\n<h3>{points}</h3>\n"
+    "<script>\n  let name = \"John Doe\";\n  let points = 100;\n</script>\n\n<style>\n  h1 {\n    color: #204f2e;\n  }\n</style>\n\n<div class=\"container\">\n  <div class=\"card\">\n    <h1>{name}</h1>\n    <h3>{points}</h3>\n  </div>\n</div>\n"
   ],
   "names": [],
-  "mappings": "AAME,EAAE,eAAC,CAAC,AACF,KAAK,CAAE,MAAM,AACf,CAAC"
+  "mappings": "AAME,EAAE,eAAC,CAAC,AACF,KAAK,CAAE,OAAO,AAChB,CAAC"
 }

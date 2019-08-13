@@ -246,18 +246,24 @@ var app = (function () {
     const file = "src/App.svelte";
 
     function create_fragment(ctx) {
-    	var h1, t0, t1, h3, t2;
+    	var div1, div0, h1, t0, t1, h3, t2;
 
     	return {
     		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
     			h1 = element("h1");
     			t0 = text(name);
     			t1 = space();
     			h3 = element("h3");
     			t2 = text(points);
-    			attr(h1, "class", "svelte-1ucbz36");
-    			add_location(h1, file, 11, 0, 113);
-    			add_location(h3, file, 12, 0, 129);
+    			attr(h1, "class", "svelte-10ukloy");
+    			add_location(h1, file, 13, 4, 163);
+    			add_location(h3, file, 14, 4, 183);
+    			attr(div0, "class", "card");
+    			add_location(div0, file, 12, 2, 140);
+    			attr(div1, "class", "container");
+    			add_location(div1, file, 11, 0, 114);
     		},
 
     		l: function claim(nodes) {
@@ -265,10 +271,12 @@ var app = (function () {
     		},
 
     		m: function mount(target, anchor) {
-    			insert(target, h1, anchor);
+    			insert(target, div1, anchor);
+    			append(div1, div0);
+    			append(div0, h1);
     			append(h1, t0);
-    			insert(target, t1, anchor);
-    			insert(target, h3, anchor);
+    			append(div0, t1);
+    			append(div0, h3);
     			append(h3, t2);
     		},
 
@@ -278,9 +286,7 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach(h1);
-    				detach(t1);
-    				detach(h3);
+    				detach(div1);
     			}
     		}
     	};
