@@ -257,8 +257,115 @@ var app = (function () {
 
     const file = "src/App.svelte";
 
+    // (26:27) {:else}
+    function create_else_block(ctx) {
+    	var t;
+
+    	return {
+    		c: function create() {
+    			t = text("+");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, t, anchor);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(t);
+    			}
+    		}
+    	};
+    }
+
+    // (26:8) {#if showControls}
+    function create_if_block_1(ctx) {
+    	var t;
+
+    	return {
+    		c: function create() {
+    			t = text("-");
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, t, anchor);
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(t);
+    			}
+    		}
+    	};
+    }
+
+    // (30:4) {#if showControls}
+    function create_if_block(ctx) {
+    	var button0, t1, button1, t3, input, dispose;
+
+    	return {
+    		c: function create() {
+    			button0 = element("button");
+    			button0.textContent = "+1";
+    			t1 = space();
+    			button1 = element("button");
+    			button1.textContent = "-1";
+    			t3 = space();
+    			input = element("input");
+    			attr(button0, "class", "btn");
+    			add_location(button0, file, 30, 6, 579);
+    			attr(button1, "class", "btn btn-dark");
+    			add_location(button1, file, 31, 6, 637);
+    			attr(input, "type", "number");
+    			add_location(input, file, 32, 6, 707);
+
+    			dispose = [
+    				listen(button0, "click", ctx.addPoint),
+    				listen(button1, "click", ctx.removePoint),
+    				listen(input, "input", ctx.input_input_handler)
+    			];
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert(target, button0, anchor);
+    			insert(target, t1, anchor);
+    			insert(target, button1, anchor);
+    			insert(target, t3, anchor);
+    			insert(target, input, anchor);
+
+    			input.value = ctx.points;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (changed.points) input.value = ctx.points;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach(button0);
+    				detach(t1);
+    				detach(button1);
+    				detach(t3);
+    				detach(input);
+    			}
+
+    			run_all(dispose);
+    		}
+    	};
+    }
+
     function create_fragment(ctx) {
-    	var div1, div0, h1, t0, t1, h3, t2, t3, button0, t5, button1, t7, input, dispose;
+    	var div1, div0, h1, t0, t1, button, t2, h3, t3, t4, t5, dispose;
+
+    	function select_block_type(ctx) {
+    		if (ctx.showControls) return create_if_block_1;
+    		return create_else_block;
+    	}
+
+    	var current_block_type = select_block_type(ctx);
+    	var if_block0 = current_block_type(ctx);
+
+    	var if_block1 = (ctx.showControls) && create_if_block(ctx);
 
     	return {
     		c: function create() {
@@ -267,35 +374,25 @@ var app = (function () {
     			h1 = element("h1");
     			t0 = text(name);
     			t1 = space();
+    			button = element("button");
+    			if_block0.c();
+    			t2 = space();
     			h3 = element("h3");
-    			t2 = text(ctx.points);
-    			t3 = space();
-    			button0 = element("button");
-    			button0.textContent = "+1";
+    			t3 = text("Points: ");
+    			t4 = text(ctx.points);
     			t5 = space();
-    			button1 = element("button");
-    			button1.textContent = "-1";
-    			t7 = space();
-    			input = element("input");
-    			attr(h1, "class", "svelte-10ukloy");
-    			add_location(h1, file, 16, 4, 247);
-    			add_location(h3, file, 17, 4, 267);
-    			attr(button0, "class", "btn");
-    			add_location(button0, file, 18, 4, 289);
-    			attr(button1, "class", "btn btn-dark");
-    			add_location(button1, file, 19, 4, 345);
-    			attr(input, "type", "number");
-    			add_location(input, file, 20, 4, 413);
+    			if (if_block1) if_block1.c();
+    			attr(button, "class", "btn btn-sm");
+    			add_location(button, file, 24, 6, 399);
+    			attr(h1, "class", "svelte-n9s305");
+    			add_location(h1, file, 22, 4, 375);
+    			attr(h3, "class", "svelte-n9s305");
+    			add_location(h3, file, 28, 4, 524);
     			attr(div0, "class", "card");
-    			add_location(div0, file, 15, 2, 224);
+    			add_location(div0, file, 21, 2, 352);
     			attr(div1, "class", "container");
-    			add_location(div1, file, 14, 0, 198);
-
-    			dispose = [
-    				listen(button0, "click", ctx.addPoint),
-    				listen(button1, "click", ctx.removePoint),
-    				listen(input, "input", ctx.input_input_handler)
-    			];
+    			add_location(div1, file, 20, 0, 326);
+    			dispose = listen(button, "click", ctx.toggleControls);
     		},
 
     		l: function claim(nodes) {
@@ -307,25 +404,43 @@ var app = (function () {
     			append(div1, div0);
     			append(div0, h1);
     			append(h1, t0);
-    			append(div0, t1);
+    			append(h1, t1);
+    			append(h1, button);
+    			if_block0.m(button, null);
+    			append(div0, t2);
     			append(div0, h3);
-    			append(h3, t2);
-    			append(div0, t3);
-    			append(div0, button0);
+    			append(h3, t3);
+    			append(h3, t4);
     			append(div0, t5);
-    			append(div0, button1);
-    			append(div0, t7);
-    			append(div0, input);
-
-    			input.value = ctx.points;
+    			if (if_block1) if_block1.m(div0, null);
     		},
 
     		p: function update(changed, ctx) {
-    			if (changed.points) {
-    				set_data(t2, ctx.points);
+    			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(button, null);
+    				}
     			}
 
-    			if (changed.points) input.value = ctx.points;
+    			if (changed.points) {
+    				set_data(t4, ctx.points);
+    			}
+
+    			if (ctx.showControls) {
+    				if (if_block1) {
+    					if_block1.p(changed, ctx);
+    				} else {
+    					if_block1 = create_if_block(ctx);
+    					if_block1.c();
+    					if_block1.m(div0, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
     		},
 
     		i: noop,
@@ -336,7 +451,9 @@ var app = (function () {
     				detach(div1);
     			}
 
-    			run_all(dispose);
+    			if_block0.d();
+    			if (if_block1) if_block1.d();
+    			dispose();
     		}
     	};
     }
@@ -346,9 +463,11 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	
       let points = 100;
+      let showControls = false;
 
       const addPoint = () => { const $$result = (points += 1); $$invalidate('points', points); return $$result; };
       const removePoint = () => { const $$result = (points -= 1); $$invalidate('points', points); return $$result; };
+      const toggleControls = () => { const $$result = (showControls = !showControls); $$invalidate('showControls', showControls); return $$result; };
 
     	function input_input_handler() {
     		points = to_number(this.value);
@@ -357,8 +476,10 @@ var app = (function () {
 
     	return {
     		points,
+    		showControls,
     		addPoint,
     		removePoint,
+    		toggleControls,
     		input_input_handler
     	};
     }
