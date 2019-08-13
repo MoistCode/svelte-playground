@@ -3,7 +3,7 @@
   import Player from "./Player.svelte";
   import AddPlayer from "./AddPlayer.svelte";
 
-  const players = [
+  let players = [
     {
       name: "John Doe",
       points: 100
@@ -17,6 +17,12 @@
       points: 100
     }
   ];
+
+  const addPlayer = e => {
+    const newPlayer = e.detail;
+
+    players = [...players, newPlayer];
+  };
 </script>
 
 <style>
@@ -25,7 +31,7 @@
 
 <Navbar />
 <div class="container">
-  <AddPlayer />
+  <AddPlayer on:addplayer={addPlayer} />
   {#if players.length === 0}
     <p>No Players</p>
   {:else}

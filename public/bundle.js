@@ -745,7 +745,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (31:2) {:else}
+    // (37:2) {:else}
     function create_else_block$1(ctx) {
     	var each_1_anchor, current;
 
@@ -827,7 +827,7 @@ var app = (function () {
     	};
     }
 
-    // (29:2) {#if players.length === 0}
+    // (35:2) {#if players.length === 0}
     function create_if_block$1(ctx) {
     	var p;
 
@@ -835,7 +835,7 @@ var app = (function () {
     		c: function create() {
     			p = element("p");
     			p.textContent = "No Players";
-    			add_location(p, file$3, 29, 4, 443);
+    			add_location(p, file$3, 35, 4, 571);
     		},
 
     		m: function mount(target, anchor) {
@@ -854,7 +854,7 @@ var app = (function () {
     	};
     }
 
-    // (32:4) {#each players as player}
+    // (38:4) {#each players as player}
     function create_each_block(ctx) {
     	var current;
 
@@ -904,6 +904,7 @@ var app = (function () {
     	var navbar = new Navbar({ $$inline: true });
 
     	var addplayer = new AddPlayer({ $$inline: true });
+    	addplayer.$on("addplayer", ctx.addPlayer);
 
     	var if_block_creators = [
     		create_if_block$1,
@@ -929,7 +930,7 @@ var app = (function () {
     			t1 = space();
     			if_block.c();
     			attr(div, "class", "container");
-    			add_location(div, file$3, 26, 0, 370);
+    			add_location(div, file$3, 32, 0, 473);
     		},
 
     		l: function claim(nodes) {
@@ -1000,10 +1001,10 @@ var app = (function () {
     	};
     }
 
-    function instance$2($$self) {
+    function instance$2($$self, $$props, $$invalidate) {
     	
 
-      const players = [
+      let players = [
         {
           name: "John Doe",
           points: 100
@@ -1018,7 +1019,13 @@ var app = (function () {
         }
       ];
 
-    	return { players };
+      const addPlayer = e => {
+        const newPlayer = e.detail;
+
+        $$invalidate('players', players = [...players, newPlayer]);
+      };
+
+    	return { players, addPlayer };
     }
 
     class App extends SvelteComponentDev {
